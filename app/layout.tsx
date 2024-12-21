@@ -33,7 +33,7 @@ export default function RootLayout({
       <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
-          defaultTheme="system"
+          defaultTheme="light"
           enableSystem
           disableTransitionOnChange
         >
@@ -45,6 +45,7 @@ export default function RootLayout({
                     <Link href={"/"}>Next.js Supabase Starter</Link>
                     <div className="flex items-center gap-2">
                       <DeployButton />
+                      <ThemeSwitcher />
                     </div>
                   </div>
                   {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
