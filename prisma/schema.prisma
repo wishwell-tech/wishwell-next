@@ -6,9 +6,172 @@
 
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id            String       @id @default(cuid())
+  supabaseId    String       @unique @db.Uuid
+  email         String       @unique
+  firstName     String
+  lastName      String
+  nickname      String?
+  phoneNumber   String?
+  imageUrl      String?      // Profile picture
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  // Relations
+  wishes        Wish[]       // Wishes created by the user
+  reservedWishes Wish[]      @relation("WishReserver") // Wishes reserved by the user
+  groups        GroupMember[]
+  createdGroups Group[]      @relation("GroupCreator")
+  events        Event[]      // Events created by the user
+  assignments   Assignment[] // Assignments to buy gifts for others
+  assignedTo    Assignment[] @relation("AssignedTo") // Others assigned to buy gifts for this user
+
+  @@index([email])
+  @@index([supabaseId])
+  @@index([id])
+  @@index([firstName, lastName])
+  @@map("users")
+}
+
+model Wish {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  price       Float?
+  url         String?   // Link to product
+  priority    Int?      // Optional priority level
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  userId      String    // Creator of the wish
+  user        User      @relation(fields: [userId], references: [id])
+  reserverId  String?   // Person who reserved the wish
+  reserver    User?     @relation("WishReserver", fields: [reserverId], references: [id])
+  event       Event?    @relation(fields: [eventId], references: [id])
+  eventId     String?
+
+  @@index([title])
+  @@index([createdAt])
+  @@index([price])
+  @@index([userId])
+  @@index([reserverId])
+  @@index([eventId])
+  @@map("wishes")
+}
+
+model Group {
+  id          String       @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String?      // Group picture
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  members     GroupMember[]
+  events      Event[]
+  creatorId   String
+  creator     User         @relation("GroupCreator", fields: [creatorId], references: [id])
+
+  @@index([name])
+  @@index([createdAt])
+  @@index([creatorId])
+  @@map("groups")
+}
+
+model GroupMember {
+  id        String    @id @default(cuid())
+  role      GroupRole @default(MEMBER)
+  joinedAt  DateTime  @default(now())
+
+  // Relations
+  userId    String
+  user      User      @relation(fields: [userId], references: [id])
+  groupId   String
+  group     Group     @relation(fields: [groupId], references: [id])
+
+  @@index([role])
+  @@index([joinedAt])
+  @@unique([userId, groupId])
+  @@index([userId])
+  @@index([groupId])
+  @@map("group_members")
+}
+
+model Event {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  isRecurring Boolean     @default(false)
+  recurringType RecurringType? // For birthdays, anniversaries
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  groupId     String?
+  group       Group?      @relation(fields: [groupId], references: [id])
+  creatorId   String
+  creator     User        @relation(fields: [creatorId], references: [id])
+  wishes      Wish[]
+  assignments Assignment[]
+
+  @@index([date])
+  @@index([title])
+  @@index([isRecurring, recurringType])
+  @@index([groupId])
+  @@index([creatorId])
+  @@map("events")
+}
+
+model Assignment {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  eventId     String
+  event       Event     @relation(fields: [eventId], references: [id])
+  assignerId  String    // Person who created the assignment
+  assigner    User      @relation(fields: [assignerId], references: [id])
+  assignedToId String   // Person who needs to buy the gift
+  assignedTo  User      @relation("AssignedTo", fields: [assignedToId], references: [id])
+
+  @@index([completed])
+  @@index([createdAt])
+  @@index([eventId])
+  @@index([assignerId])
+  @@index([assignedToId])
+  @@map("assignments")
+}
+
+enum GroupRole {
+  ADMIN
+  MODERATOR
+  MEMBER
+
+  @@map("group_role")
+}
+
+enum RecurringType {
+  YEARLY      // For birthdays, anniversaries
+  MONTHLY
+  WEEKLY
+
+  @@map("recurring_type")
 }
