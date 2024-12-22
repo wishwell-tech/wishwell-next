@@ -35,6 +35,10 @@ export const signUpAction = async (formData: FormData) => {
     password,
     options: {
       emailRedirectTo: `${origin}/auth/callback`,
+      data: {
+        firstName,
+        lastName,
+      },
     },
   });
 
@@ -43,13 +47,19 @@ export const signUpAction = async (formData: FormData) => {
     return encodedRedirect("error", "/sign-up", error.message);
   } else {
     if (data.user) {
-      await prisma.user.create({
+      const userData = await prisma.user.create({
         data: {
           email,
           supabaseId: data.user.id,
           firstName,
           lastName,
         },
+      });
+
+      await supabase.auth.updateUser({
+          data: {
+            app_user_id: userData.id,
+          }
       });
     }
 
