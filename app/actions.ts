@@ -15,7 +15,6 @@ export const signUpAction = async (formData: FormData) => {
   
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||  
                  'http://localhost:3001';
-  console.log("🌎 origin: ", origin);
   if (!email || !password || !firstName || !lastName) {
     return encodedRedirect(
       "error",
@@ -95,7 +94,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   const supabase = await createClient();
   const origin = process.env.NEXT_PUBLIC_SITE_URL ||  
                  'http://localhost:3001';
-                 
+
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
   if (!email) {
