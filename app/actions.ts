@@ -99,7 +99,7 @@ export const forgotPasswordAction = async (formData: FormData) => {
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?redirect_to=/reset-password`,
+    redirectTo: `${origin}/auth/callback?redirect_to=/p/reset-password`,
   });
 
   if (error) {
@@ -156,7 +156,7 @@ export const resetPasswordAction = async (formData: FormData) => {
     );
   }
 
-  encodedRedirect("success", "/reset-password", "Password updated");
+  encodedRedirect("success", "/p/reset-password", "Password updated");
 };
 
 export const signOutAction = async () => {
