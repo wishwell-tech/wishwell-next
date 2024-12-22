@@ -12,8 +12,10 @@ export const signUpAction = async (formData: FormData) => {
   const firstName = formData.get("firstName")?.toString();
   const lastName = formData.get("lastName")?.toString();
   const supabase = await createClient();
-  const origin = (await headers()).get("origin");
-
+  
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||  
+                 'http://localhost:3001';
+  console.log("🌎 origin: ", origin);
   if (!email || !password || !firstName || !lastName) {
     return encodedRedirect(
       "error",
@@ -34,7 +36,7 @@ export const signUpAction = async (formData: FormData) => {
     email,
     password,
     options: {
-      emailRedirectTo: `${origin}/auth/callback`,
+      emailRedirectTo: `${siteUrl}/auth/callback`,
       data: {
         firstName,
         lastName,
@@ -91,7 +93,9 @@ export const signInAction = async (formData: FormData) => {
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const supabase = await createClient();
-  const origin = (await headers()).get("origin");
+  const origin = process.env.NEXT_PUBLIC_SITE_URL ||  
+                 'http://localhost:3001';
+                 
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
   if (!email) {
