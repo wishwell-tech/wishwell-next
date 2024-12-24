@@ -6,7 +6,8 @@ import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import SectionHeader from "@/components/shared/section-header";
 import EmptyState from "@/components/shared/empty-state";
-import WishCard, { WishWithRelations } from "@/components/shared/wish-card";
+import { type WishWithRelations } from "@/app/data/wish";
+import WishCard from "@/components/shared/wish-card";
 
 function WishSkeleton() {
     return (

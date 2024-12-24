@@ -3,12 +3,13 @@
 import { Gift, Calendar, Users, Handshake } from 'lucide-react';
 import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 const actions = [
-    { icon: Gift, label: 'Wish', action: () => console.log('Add Wish') },
-    { icon: Calendar, label: 'Event', action: () => console.log('Create Event') },
-    { icon: Users, label: 'Group', action: () => console.log('Create Group') },
-    { icon: Handshake, label: 'Asgnmnt', action: () => console.log('Make Assignment') },
+    { icon: Gift, label: 'Wish', href: '/p/list/new-wish', action: () => console.log('Add Wish') },
+    { icon: Calendar, label: 'Event', href: '/p/events/new', action: () => console.log('Create Event') },
+    { icon: Users, label: 'Group', href: '/p/groups/new', action: () => console.log('Create Group') },
+    { icon: Handshake, label: 'Asgnmnt', href: '/p/assignments/new', action: () => console.log('Make Assignment') },
 ];
 
 export default function QuickActions() {
@@ -24,17 +25,18 @@ export default function QuickActions() {
                 className="flex gap-3 overflow-x-auto scrollbar-hide"
             >
                 {actions.map((action, index) => (
-                    <Button
-                        key={index}
-                        onClick={action.action}
-                        variant="secondary"
-                        className="flex items-center gap-2 h-12 px-4"
-                    >
-                        <action.icon className="w-4 h-4" />
-                        <span className="text-sm whitespace-nowrap">
-                            {action.label}
-                        </span>
-                    </Button>
+                    <Link key={index} href={action.href}>
+                        <Button
+                            onClick={action.action}
+                            variant="secondary"
+                            className="flex items-center gap-2 h-12 px-4"
+                        >
+                            <action.icon className="w-4 h-4" />
+                            <span className="text-sm whitespace-nowrap">
+                                {action.label}
+                            </span>
+                        </Button>
+                    </Link>
                 ))}
             </div>
         </div>
