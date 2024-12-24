@@ -1,29 +1,23 @@
-import { Suspense } from "react";
-import { getWishes } from "@/app/data/wish";
-import { getCurrentUser } from "@/app/data/user";
-import WishListSkeleton from "@/components/shared/wish-list-skeleton";
-import WishListClient from "@/components/wish-list-client";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+
+import WishListClient from "@/components/wish/wish-list-client";
+import Link from "next/link";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import SectionHeader from "@/components/shared/section-header";
 
 export default async function ListPage() {
-  const { wishes, error: wishError } = await getWishes();
-  const { id: userId, error: userError } = await getCurrentUser();
-
-  const error = userError || wishError;
-
   return (
     <div className="container max-w-6xl py-6">
-      <Suspense fallback={<WishListSkeleton />}>
-        {error ? (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        ) : (
-          <WishListClient wishes={wishes} userId={userId} />
-        )}
-      </Suspense>
+        <div className="flex items-center justify-between">
+        <SectionHeader title="My Wishes" />
+        <Button asChild>
+          <Link href="/p/list/new-wish">
+            <Plus className="w-4 h-4 mr-2" />
+            New Wish
+          </Link>
+        </Button>
+      </div>
+      <WishListClient />
     </div>
   );
 }

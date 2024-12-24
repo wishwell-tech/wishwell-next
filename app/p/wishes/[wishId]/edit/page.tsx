@@ -2,8 +2,9 @@ import { getWish } from "@/app/data/wish";
 import { WishForm } from "@/components/wish/wish-form";
 import { notFound } from "next/navigation";
 
-export default async function Page({ params }: { params: { wishId: string } }) {
-    const { wish, error } = await getWish(params.wishId);
+export default async function Page({ params }: { params: Promise<{ wishId: string }> }) {
+    const wishId = (await params).wishId;
+    const { wish, error } = await getWish(wishId);
     
     if (error || !wish) {
         notFound();
