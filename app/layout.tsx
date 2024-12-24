@@ -1,9 +1,6 @@
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Geist } from "next/font/google";
+import localFont from "next/font/local";;
 import { ThemeProvider } from "next-themes";
-import Link from "next/link";
 import "./globals.css";
-import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "Wishwell - Gift Giving Made Joyful",
@@ -21,9 +18,17 @@ export const metadata = {
   ],
 };
 
-const geistSans = Geist({
-  display: "swap",
-  subsets: ["latin"],
+
+const domineVariable = localFont({
+  src: "./fonts/Domine-VariableFont_wght.ttf",
+  variable: "--font-domine-variable",
+  weight: "100 900",
+});
+
+const latoVariable = localFont({
+  src: "./fonts/Lato-Regular.ttf",
+  variable: "--font-lato-variable",
+  weight: "100 900",
 });
 
 export default function RootLayout({
@@ -32,37 +37,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={geistSans.className} suppressHydrationWarning>
+    <html lang="en" className={`${domineVariable.variable} ${latoVariable.variable} antialiased`} suppressHydrationWarning>
       <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
-        >
-          <main className="min-h-screen flex flex-col items-center">
-            <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-              <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5">
-                <Link href="/" className="text-xl font-bold">Wishwell</Link>
-                <div className="flex items-center gap-4">
-                  <Link href="/sign-in" className="hover:text-primary">Login</Link>
-                  <Button variant="outline" asChild>
-                    <Link href="/sign-up" className="hover:text-primary">Signup</Link>
-                  </Button>
-                  <ThemeSwitcher />
-                </div>
-              </div>
-            </nav>
+        >            
             {children}
-            <footer className="w-full border-t py-8 mt-20">
-              <div className="max-w-5xl mx-auto px-5 flex justify-between items-center">
-                <p className="text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} Wishwell. All rights reserved.
-                </p>
-                <ThemeSwitcher />
-              </div>
-            </footer>
-          </main>
         </ThemeProvider>
       </body>
     </html>
