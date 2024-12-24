@@ -53,6 +53,8 @@ model Wish {
   priority    Int?      // Optional priority level
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  completed   Boolean   @default(false)
+  received    Boolean   @default(false)
   
   // Relations
   userId      String    // Creator of the wish

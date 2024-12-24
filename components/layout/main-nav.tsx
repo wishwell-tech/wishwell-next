@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Home, Calendar, Gift, User } from "lucide-react";
+import { Home, Calendar, Gift, ScrollText } from "lucide-react";
 
 import {
   Sidebar,
@@ -24,19 +24,19 @@ const navItems = [
     icon: Home,
   },
   {
-    title: "Events",
-    href: "/p/events",
-    icon: Calendar,
-  },
-  {
     title: "Wishes",
     href: "/p/wishes",
     icon: Gift,
   },
   {
-    title: "Profile",
-    href: "/p/profile",
-    icon: User,
+    title: "Events",
+    href: "/p/events",
+    icon: Calendar,
+  },
+  {
+    title: "My List",
+    href: "/p/list",
+    icon: ScrollText,
   },
 ];
 
@@ -48,9 +48,7 @@ export function MainNav() {
       {/* Sidebar for tablet and up */}
       <div className="hidden md:block">
         <Sidebar>
-          <SidebarHeader>
-            Wishwell    
-          </SidebarHeader>
+          <SidebarHeader>Wishwell</SidebarHeader>
           <SidebarContent>
             <SidebarGroup>
               <SidebarGroupLabel>Navigation</SidebarGroupLabel>
