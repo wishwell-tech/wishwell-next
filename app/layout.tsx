@@ -1,9 +1,6 @@
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Geist } from "next/font/google";
+import localFont from "next/font/local";;
 import { ThemeProvider } from "next-themes";
-import Link from "next/link";
 import "./globals.css";
-import { Button } from "@/components/ui/button";
 
 export const metadata = {
   title: "Wishwell - Gift Giving Made Joyful",
@@ -21,9 +18,17 @@ export const metadata = {
   ],
 };
 
-const geistSans = Geist({
-  display: "swap",
-  subsets: ["latin"],
+
+const domineVariable = localFont({
+  src: "./fonts/Domine-VariableFont_wght.ttf",
+  variable: "--font-domine-variable",
+  weight: "100 900",
+});
+
+const latoVariable = localFont({
+  src: "./fonts/Lato-Regular.ttf",
+  variable: "--font-lato-variable",
+  weight: "100 900",
 });
 
 export default function RootLayout({
@@ -32,15 +37,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={geistSans.className} suppressHydrationWarning>
+    <html lang="en" className={`${domineVariable.variable} ${latoVariable.variable} antialiased`} suppressHydrationWarning>
       <body className="bg-background text-foreground">
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
           enableSystem
           disableTransitionOnChange
-        >
-            
+        >            
             {children}
         </ThemeProvider>
       </body>
