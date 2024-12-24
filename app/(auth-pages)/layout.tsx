@@ -1,6 +1,5 @@
-import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Button } from "@/components/ui/button";
-import { Link } from "lucide-react";
+import { PublicNavbar } from "@/components/public/public-navbar";
+import { PublicFooter } from "@/components/public/public-footer";
 
 export default async function Layout({
   children,
@@ -8,36 +7,12 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="w-full">
-      <nav className="w-full flex justify-center border-b border-b-foreground/10 h-16">
-        <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5">
-          <Link href="/" className="text-xl font-bold">
-            Wishwell
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/sign-in" className="hover:text-primary">
-              Login
-            </Link>
-            <Button variant="outline" asChild>
-              <Link href="/sign-up" className="hover:text-primary">
-                Signup
-              </Link>
-            </Button>
-            <ThemeSwitcher />
-          </div>
-        </div>
-      </nav>
-      <div className="max-w-7xl flex flex-col gap-12 items-start">
+    <div className="w-full mx-auto min-h-screen flex flex-col">
+      <PublicNavbar />
+      <div className="max-w-7xl flex flex-col gap-1 mt-12 items-center mx-auto flex-grow">
         {children}
       </div>
-      <footer className="w-full border-t py-8 mt-20">
-        <div className="max-w-5xl mx-auto px-5 flex justify-between items-center">
-          <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Wishwell. All rights reserved.
-          </p>
-          <ThemeSwitcher />
-        </div>
-      </footer>
+      <PublicFooter />
     </div>
   );
 }
