@@ -33,57 +33,55 @@ export const signUpAction = async (formData: FormData) => {
 
   const supabase = await createClient();
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: `${siteUrl}/auth/callback`,
-      data: {
-        firstName,
-        lastName,
-      },
-    },
-  });
-
-  if (error) {
-    console.error("Supabase signup error:", error.code, error.message);
-    return encodedRedirect("error", "/sign-up", error.message);
-  }
-
-  if (!data.user) {
-    console.error("No user data returned from Supabase");
-    return encodedRedirect("error", "/sign-up", "Failed to create account");
-  }
-
-  console.log("Supabase auth signup successful:", data.user.id);
-
   try {
-    // Check for existing user but don't error immediately
-    const existingUser = await prisma.user.findUnique({
-      where: { supabaseId: data.user.id }
+    
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${siteUrl}/auth/callback`,
+        data: {
+          firstName,
+          lastName,
+        },
+      },
     });
-
-    if (existingUser) {
-      console.log("User already exists in database, proceeding with existing user");
-      return encodedRedirect(
-        "success",
-        "/sign-up",
-        "Thanks for signing up! Please check your email for a verification link.",
-      );
+    
+    if (error || !data.user) {
+      console.error("Supabase signup error:", error?.code, error?.message);
+      return encodedRedirect("error", "/sign-up", error?.message || "Unknown error");
     }
 
-    console.log("Creating new user in database...");
-    const userData = await prisma.user.create({
-      data: {
-        email,
-        supabaseId: data.user.id,
-        firstName,
-        lastName,
-      },
+    // Check for existing pending user
+    const pendingUser = await prisma.user.findUnique({
+      where: { email }
     });
 
-    console.log("User created in database:", userData.id);
-    
+    if (pendingUser?.isPending) {
+      // Update existing pending user
+      await prisma.user.update({
+        where: { id: pendingUser.id },
+        data: {
+          supabaseId: data.user.id,
+          firstName,
+          lastName,
+          isPending: false,
+        },
+      });
+    } else {
+      // Create new user
+      await prisma.user.create({
+        data: {
+          email,
+          supabaseId: data.user.id,
+          firstName,
+          lastName,
+        },
+      });
+    }
+
+    console.log("Supabase auth signup successful:", data.user.id);
+
     // Move the redirect outside of the try/catch since it's not an error
     return encodedRedirect(
       "success",
@@ -98,12 +96,12 @@ export const signUpAction = async (formData: FormData) => {
     }
     
     console.error("Database error:", err);
-    // Only delete the Supabase user if we failed to create the database entry
-    try {
-      await supabase.auth.admin.deleteUser(data.user.id);
-    } catch (deleteErr) {
-      console.error("Failed to delete Supabase user after error:", deleteErr);
-    }
+    // // Only delete the Supabase user if we failed to create the database entry
+    // try {
+    //   await supabase.auth.admin.deleteUser(data.user.id);
+    // } catch (deleteErr) {
+    //   console.error("Failed to delete Supabase user after error:", deleteErr);
+    // }
     return encodedRedirect(
       "error",
       "/sign-up",

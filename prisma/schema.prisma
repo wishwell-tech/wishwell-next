@@ -18,13 +18,16 @@ datasource db {
 
 model User {
   id            String       @id @default(cuid())
-  supabaseId    String       @unique @db.Uuid
+  supabaseId    String?      @unique @db.Uuid
   email         String       @unique
-  firstName     String
-  lastName      String
+  firstName     String?
+  lastName      String?
   nickname      String?
   phoneNumber   String?
   imageUrl      String?      // Profile picture
+  isPending     Boolean      @default(false)
+  invitedBy     String?
+  invitedAt     DateTime?
   createdAt     DateTime     @default(now())
   updatedAt     DateTime     @updatedAt
 
