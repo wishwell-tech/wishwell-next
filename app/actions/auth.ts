@@ -31,9 +31,10 @@ export const signUpAction = async (formData: FormData) => {
   }
 
   const headersList = await headers();
-  const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
   const host = headersList.get('host');
-  const siteUrl = `${protocol}://${host}`;
+  const siteUrl = process.env.NODE_ENV === 'production' 
+    ? process.env.NEXT_PUBLIC_SITE_URL 
+    : `http://${host}`;
 
   const supabase = await createClient();
 
