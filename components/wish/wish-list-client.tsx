@@ -4,17 +4,11 @@ import Link from "next/link";
 import WishCard from "@/components/shared/wish-card";
 import { Button } from "@/components/ui/button";
 import { Plus, ChevronDown, ChevronUp } from "lucide-react";
-import SectionHeader from "@/components/shared/section-header";
 import EmptyState from "@/components/shared/empty-state";
 import { getWishes, type WishWithRelations } from "@/app/data/wish";
 import { getCurrentUser } from "@/app/data/user";
 
-// interface WishListClientProps {
-//   wishes: WishWithRelations[];
-//   userId?: string;
-// }
 
-// export default function WishListClient({ wishes, userId }: WishListClientProps) {
 export default function WishListClient() {
   const [wishes, setWishes] = useState<WishWithRelations[]>([]);
   const [userId, setUserId] = useState<string | null>(null);

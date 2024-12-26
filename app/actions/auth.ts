@@ -13,8 +13,7 @@ export const signUpAction = async (formData: FormData) => {
   const lastName = formData.get("lastName")?.toString();
   
   
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ||  
-                 'http://localhost:3001';
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   if (!email || !password || !firstName || !lastName) {
     return encodedRedirect(
       "error",
@@ -130,8 +129,7 @@ export const signInAction = async (formData: FormData) => {
 export const forgotPasswordAction = async (formData: FormData) => {
   const email = formData.get("email")?.toString();
   const supabase = await createClient();
-  const origin = process.env.NEXT_PUBLIC_SITE_URL ||  
-                 'http://localhost:3001';
+  const origin = process.env.NEXT_PUBLIC_SITE_URL;
 
   const callbackUrl = formData.get("callbackUrl")?.toString();
 
