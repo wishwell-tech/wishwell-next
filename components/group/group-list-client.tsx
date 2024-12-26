@@ -6,12 +6,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { PlusCircle } from "lucide-react";
+import { getGroups } from "@/app/data/group";
+import { useEffect, useState } from "react";
 
 interface GroupListClientProps {
   groups: GroupWithRelations[];
 }
 
-export function GroupListClient({ groups }: GroupListClientProps) {
+export function GroupListClient() {
+  const [groups, setGroups] = useState<GroupWithRelations[]>([]);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      const { groups } = await getGroups();
+      setGroups(groups);
+    };
+    fetchGroups();
+  }, []);
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
