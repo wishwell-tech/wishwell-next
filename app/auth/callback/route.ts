@@ -5,7 +5,10 @@ import { prisma } from "@/lib/prisma";
 export async function GET(request: Request) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
-  const origin = requestUrl.origin;
+  // Use NEXT_PUBLIC_SITE_URL in production, fallback to request origin for development
+  const baseUrl = process.env.NODE_ENV === 'production'
+    ? process.env.NEXT_PUBLIC_SITE_URL
+    : requestUrl.origin;
   const redirectTo = requestUrl.searchParams.get("redirect_to")?.toString();
 
   if (code) {
@@ -41,8 +44,8 @@ export async function GET(request: Request) {
   }
 
   if (redirectTo) {
-    return NextResponse.redirect(`${origin}${redirectTo}`);
+    return NextResponse.redirect(`${baseUrl}${redirectTo}`);
   }
 
-  return NextResponse.redirect(`${origin}/p/home`);
+  return NextResponse.redirect(`${baseUrl}/p/home`);
 }

@@ -13,7 +13,7 @@ export const signUpAction = async (formData: FormData) => {
   const lastName = formData.get("lastName")?.toString();
   
   
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  
   if (!email || !password || !firstName || !lastName) {
     return encodedRedirect(
       "error",
@@ -29,6 +29,12 @@ export const signUpAction = async (formData: FormData) => {
       "Password must be at least 8 characters long"
     );
   }
+
+  const headersList = await headers();
+  const host = headersList.get('host');
+  const siteUrl = process.env.NODE_ENV === 'production' 
+    ? process.env.NEXT_PUBLIC_SITE_URL 
+    : `http://${host}`;
 
   const supabase = await createClient();
 
