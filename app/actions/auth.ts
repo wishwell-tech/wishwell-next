@@ -36,6 +36,9 @@ export const signUpAction = async (formData: FormData) => {
     ? process.env.NEXT_PUBLIC_SITE_URL 
     : `http://${host}`;
 
+
+  console.log("💀 HEADERS:", headersList);
+  console.log("🍦 HOST:", host);
   console.log("🌴 ENV:", process.env.NODE_ENV);
   console.log("🔗 SITE URL:", siteUrl);
 
