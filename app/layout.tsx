@@ -16,6 +16,9 @@ export const metadata = {
     "Christmas gifts",
     "gift organization"
   ],
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 

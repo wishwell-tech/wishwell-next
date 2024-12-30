@@ -30,15 +30,15 @@ export const signUpAction = async (formData: FormData) => {
     );
   }
 
-  const headersList = await headers();
-  const host = headersList.get('host');
-  const siteUrl = process.env.NODE_ENV === 'production' 
-    ? process.env.NEXT_PUBLIC_SITE_URL 
-    : `http://${host}`;
+  // const headersList = await headers();
+  // const host = headersList.get('host');
+  // const siteUrl = process.env.NODE_ENV === 'production' 
+  //   ? process.env.NEXT_PUBLIC_SITE_URL 
+  //   : `http://${host}`;
+
+  const siteUrl = (await headers()).get("origin");
 
 
-  console.log("💀 HEADERS:", headersList);
-  console.log("🍦 HOST:", host);
   console.log("🌴 ENV:", process.env.NODE_ENV);
   console.log("🔗 SITE URL:", siteUrl);
 
