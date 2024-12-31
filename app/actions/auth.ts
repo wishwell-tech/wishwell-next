@@ -46,12 +46,8 @@ export const signUpAction = async (formData: FormData) => {
     NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
   });
 
-  const siteUrl =
-    process.env.NODE_ENV === "production"
-      ? process.env.NEXT_PUBLIC_SITE_URL
-      : origin;
 
-  console.log("🚀 Final siteUrl being used:", siteUrl);
+  console.log("🚀 Final siteUrl being used:", origin);
 
   const supabase = await createClient();
 
@@ -60,7 +56,7 @@ export const signUpAction = async (formData: FormData) => {
       email,
       password,
       options: {
-        emailRedirectTo: `${siteUrl}/auth/callback`,
+        emailRedirectTo: `${origin}/auth/callback`,
         data: {
           firstName,
           lastName,
