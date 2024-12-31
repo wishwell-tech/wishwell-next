@@ -12,6 +12,8 @@ export const signUpAction = async (formData: FormData) => {
   const firstName = formData.get("firstName")?.toString();
   const lastName = formData.get("lastName")?.toString();
 
+  // Change comment
+
   if (!email || !password || !firstName || !lastName) {
     return encodedRedirect(
       "error",
